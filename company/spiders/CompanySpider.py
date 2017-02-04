@@ -34,7 +34,6 @@ class CompanyspiderSpider(scrapy.Spider):
             url = element.xpath('.//a/@href').extract_first()
             request = scrapy.Request(url, callback=self.parse_company)
             request.meta['item'] = item
-
             yield request
             # Request for next page
             # url = response.xpath(
@@ -44,10 +43,8 @@ class CompanyspiderSpider(scrapy.Spider):
 
     def parse_company(self, response):
         item = response.meta['item']
-
         loader = ItemLoader(item=CompanyItem(), response=response)
         loader.default_output_processor = TakeFirst()
-
         self.driver.get(response.url)
         try:
             self.driver.find_element_by_xpath('//a[span[@class="view-website"]]').click()
